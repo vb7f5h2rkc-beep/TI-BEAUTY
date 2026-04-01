@@ -11,51 +11,44 @@
             height: 100%;
             overflow: hidden;
             background: #000;
+            color: white;
+            font-family: Arial, sans-serif;
         }
-        .page {
+        .loading {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: none;
-        }
-        .active {
-            display: block;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-<iframe id="page1" class="page active" src="https://grafana.byseven.com.br/"></iframe>
-<iframe id="page2" class="page" src="https://helpdesk.beautycolor.com.br/"></iframe>
+<div class="loading" id="loading">Carregando...</div>
 
 <script>
-    const intervaloSegundos = 30;   // ← Troca a cada 30 segundos (para teste)
-    let current = 1;
+    // URLs - mude se precisar de URL mais específica do dashboard
+    const urls = [
+        "https://grafana.byseven.com.br/",           // Grafana
+        "https://helpdesk.beautycolor.com.br/"       // GLPI
+    ];
 
-    function alternarPaginas() {
-        const page1 = document.getElementById('page1');
-        const page2 = document.getElementById('page2');
+    let index = 0;
+    const intervaloSegundos = 30;   // 30 segundos para teste
 
-        if (current === 1) {
-            page1.classList.remove('active');
-            page2.classList.add('active');
-            current = 2;
-        } else {
-            page2.classList.remove('active');
-            page1.classList.add('active');
-            current = 1;
-        }
+    function alternar() {
+        index = (index + 1) % urls.length;
+        window.location.href = urls[index];
     }
 
-    // Troca automática a cada 30 segundos
-    setInterval(alternarPaginas, intervaloSegundos * 1000);
+    // Troca automática
+    setInterval(alternar, intervaloSegundos * 1000);
 
-    // Garante que a primeira página apareça
+    // Carrega a primeira página
     window.onload = function() {
-        document.getElementById('page1').classList.add('active');
+        document.getElementById('loading').style.display = 'none';
+        window.location.href = urls[0];
     };
 </script>
 
