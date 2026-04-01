@@ -20,7 +20,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            font-size: 24px;
+            font-size: 28px;
         }
     </style>
 </head>
@@ -29,35 +29,41 @@
 <div class="loading" id="loading">Carregando Monitoramento...</div>
 
 <script>
-    // URLs exatas
+    // === SUAS URLs EXATAS ===
     const urls = [
         "https://grafana.byseven.com.br/d/DWSW-KSJD/alertas-de-monitoramento-zabbix?orgId=78&from=now-6h&to=now&timezone=browser&var-maintenance=$__all&var-Atuacao=$__all",
         "https://helpdesk.beautycolor.com.br/"
     ];
 
-    const intervaloSegundos = 30;   // 30 segundos para teste
+    const intervaloSegundos = 30;   // ? 30 segundos para teste
 
-    function iniciarRotacao() {
-        // Troca a cada 30 segundos
-        setInterval(() => {
-            const currentUrl = window.location.href;
-            const nextIndex = urls.findIndex(url => url === currentUrl) + 1;
-            const nextUrl = urls[nextIndex % urls.length];
-            window.location.href = nextUrl;
-        }, intervaloSegundos * 1000);
+    // Função que decide qual página carregar
+    function carregarPagina() {
+        const urlAtual = window.location.href.split('?')[0]; // ignora parâmetros
+
+        // Se estamos no Grafana, vai pro GLPI
+        if (urlAtual.includes("grafana.byseven.com.br")) {
+            window.location.href = urls[1];
+        } 
+        // Se estamos no GLPI, volta pro Grafana
+        else {
+            window.location.href = urls[0];
+        }
     }
 
-    // Carrega a primeira página e inicia a rotação
+    // Inicia tudo
     window.onload = function() {
         document.getElementById('loading').style.display = 'none';
-        
-        // Se a URL atual não for nenhuma das nossas, força a primeira
-        if (!urls.some(url => window.location.href.includes(url.split('?')[0]))) {
+
+        // Se não estiver em nenhuma das URLs, força o Grafana
+        if (!window.location.href.includes("grafana.byseven.com.br") && 
+            !window.location.href.includes("helpdesk.beautycolor.com.br")) {
             window.location.href = urls[0];
             return;
         }
 
-        iniciarRotacao();
+        // Inicia a troca automática
+        setInterval(carregarPagina, intervaloSegundos * 1000);
     };
 </script>
 
