@@ -29,27 +29,35 @@
 <div class="loading" id="loading">Carregando Monitoramento...</div>
 
 <script>
-    // === URLs EXATAS ===
+    // URLs exatas
     const urls = [
         "https://grafana.byseven.com.br/d/DWSW-KSJD/alertas-de-monitoramento-zabbix?orgId=78&from=now-6h&to=now&timezone=browser&var-maintenance=$__all&var-Atuacao=$__all",
-        "https://helpdesk.beautycolor.com.br/"          // GLPI
+        "https://helpdesk.beautycolor.com.br/"
     ];
 
-    let index = 0;
-    const intervaloSegundos = 30;   // 30 segundos para teste rápido
+    const intervaloSegundos = 30;   // 30 segundos para teste
 
-    function alternarPagina() {
-        index = (index + 1) % urls.length;
-        window.location.href = urls[index];
+    function iniciarRotacao() {
+        // Troca a cada 30 segundos
+        setInterval(() => {
+            const currentUrl = window.location.href;
+            const nextIndex = urls.findIndex(url => url === currentUrl) + 1;
+            const nextUrl = urls[nextIndex % urls.length];
+            window.location.href = nextUrl;
+        }, intervaloSegundos * 1000);
     }
 
-    // Troca automática a cada 30 segundos
-    setInterval(alternarPagina, intervaloSegundos * 1000);
-
-    // Carrega a primeira página (Grafana)
+    // Carrega a primeira página e inicia a rotação
     window.onload = function() {
         document.getElementById('loading').style.display = 'none';
-        window.location.href = urls[0];
+        
+        // Se a URL atual não for nenhuma das nossas, força a primeira
+        if (!urls.some(url => window.location.href.includes(url.split('?')[0]))) {
+            window.location.href = urls[0];
+            return;
+        }
+
+        iniciarRotacao();
     };
 </script>
 
