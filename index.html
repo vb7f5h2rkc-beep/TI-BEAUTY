@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoramento TI - Grafana + GLPI</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    // === CONFIGURAÇÃO - MUDE AQUI SE PRECISAR ===
+    const urls = [
+        "https://grafana.byseven.com.br/d/DWSW-KSJD/alertas-de-monitoramento-zabbix?orgId=78&from=now-6h&to=now&timezone=browser&var-maintenance=$__all&var-Atuacao=$__all",           // Grafana BySeven
+        "https://helpdesk.beautycolor.com.br/front/ticket.php"       // GLPI
+        // Se quiser adicionar mais telas no futuro, coloque mais linhas aqui
+    ];
+
+    let index = 0;
+    const intervaloMinutos = 3;   // Troca a cada 3 minutos
+
+    function carregarProximaPagina() {
+        index = (index + 1) % urls.length;
+        window.location.href = urls[index];
+    }
+
+    // Troca automática a cada 3 minutos
+    setInterval(carregarProximaPagina, intervaloMinutos * 60 * 1000);
+
+    // Carrega a primeira página assim que abrir
+    window.onload = function() {
+        window.location.href = urls[0];
+    };
+</script>
+
+</body>
+</html>
