@@ -20,32 +20,33 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
 
-<div class="loading" id="loading">Carregando...</div>
+<div class="loading" id="loading">Carregando Monitoramento...</div>
 
 <script>
-    // URLs - mude se precisar de URL mais específica do dashboard
+    // === URLs EXATAS ===
     const urls = [
-        "https://grafana.byseven.com.br/",           // Grafana
-        "https://helpdesk.beautycolor.com.br/"       // GLPI
+        "https://grafana.byseven.com.br/d/DWSW-KSJD/alertas-de-monitoramento-zabbix?orgId=78&from=now-6h&to=now&timezone=browser&var-maintenance=$__all&var-Atuacao=$__all",
+        "https://helpdesk.beautycolor.com.br/"          // GLPI
     ];
 
     let index = 0;
-    const intervaloSegundos = 30;   // 30 segundos para teste
+    const intervaloSegundos = 30;   // 30 segundos para teste rápido
 
-    function alternar() {
+    function alternarPagina() {
         index = (index + 1) % urls.length;
         window.location.href = urls[index];
     }
 
-    // Troca automática
-    setInterval(alternar, intervaloSegundos * 1000);
+    // Troca automática a cada 30 segundos
+    setInterval(alternarPagina, intervaloSegundos * 1000);
 
-    // Carrega a primeira página
+    // Carrega a primeira página (Grafana)
     window.onload = function() {
         document.getElementById('loading').style.display = 'none';
         window.location.href = urls[0];
